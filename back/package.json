@@ -7,7 +7,6 @@
   "type": "module",
   "scripts": {
     "build": "node_modules/.bin/tsc",
-    "dev:node": "NODE_ENV=local node --experimental-specifier-resolution=node ./dist/adapters/primary/scripts/startServer.js",
     "start": "node --experimental-specifier-resolution=node dist/index.js"
   },
   "dependencies": {
