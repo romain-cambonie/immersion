@@ -1,0 +1,22 @@
+{
+  "name": "immersion",
+  "version": "1.0.0",
+  "description": "plop",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node_modules/.bin/tsc",
+    "dev:node": "NODE_ENV=local node --experimental-specifier-resolution=node ./dist/adapters/primary/scripts/startServer.js",
+    "start": "node --experimental-specifier-resolution=node dist/index.js"
+  },
+  "dependencies": {
+    "@serenity-dev/http-client": "^0.0.11",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^18.6.2",
+    "typescript": "^4.7.4"
+  }
+}
