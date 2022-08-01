@@ -3,7 +3,9 @@ import pino, { Logger as PinoLogger } from "pino";
 import { AppLogger, LogLevel } from "../../../ports/AppLogger";
 
 export class AppLoggerPino implements AppLogger {
-  public constructor(public readonly rootLogger: PinoLogger = pinoPrettyRootLogger) {}
+  public constructor(
+    public readonly rootLogger: PinoLogger = pinoPrettyRootLogger,
+  ) {}
 
   log<T = object>(level: LogLevel, message: string, data: T): void {
     switch (level) {
@@ -54,11 +56,13 @@ const pinoPrettyConfiguration = {
       ignore: "pid,hostname",
     },
   },
-}
+};
 
 const pinoPrettyRootLogger: PinoLogger = pino(pinoPrettyConfiguration);
 
-export const appLoggerPino: AppLoggerPino = new AppLoggerPino(pinoPrettyRootLogger);
+export const appLoggerPino: AppLoggerPino = new AppLoggerPino(
+  pinoPrettyRootLogger,
+);
 
 // Example use: const logger = createFilenameLogger(__filename);
 // back/src/ports/AppLogger.ts => AppLogger.ts

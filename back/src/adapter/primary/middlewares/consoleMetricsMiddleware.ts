@@ -1,8 +1,13 @@
 import { Middleware, Request, Response } from "../../../ports/Server";
 
-export const consoleMetricsMiddleware: Middleware = (req: Request, res: Response, next?: () => void) => {
+export const consoleMetricsMiddleware: Middleware = (
+  _req: Request,
+  _res: Response,
+  next?: () => void,
+) => {
+  // eslint-disable-next-line no-console
   console.log("__metrics", {
-    fake: "I like turtles"
+    fake: "I like turtles",
   });
-  if(next) next();
-}
+  if (next) next();
+};

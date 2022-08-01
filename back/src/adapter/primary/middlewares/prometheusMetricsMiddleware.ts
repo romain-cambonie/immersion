@@ -7,10 +7,15 @@ import { Middleware, Request, Response } from "../../../ports/Server";
 // The metrics exposed allows to calculate common metrics :
 // - RED (Request, Error rate, Duration of requests)
 // - USE (Utilisation, Error rate, and Saturation)
-export const prometheusMetricsMiddleware: Middleware = (req: Request, res: Response, next?: () => void) => {
+export const prometheusMetricsMiddleware: Middleware = (
+  _req: Request,
+  _res: Response,
+  next?: () => void,
+) => {
+  // eslint-disable-next-line no-console
   console.log("prometheusMetricsMiddleware doesn't do anything right now");
-  if(next) next();
-}
+  if (next) next();
+};
 /*
   expressPrometheusMiddleware({
   metricsPath: "/__metrics",
