@@ -29,6 +29,8 @@ module.exports = {
   "jest/require-hook": "off",
   "jest/require-to-throw-message": "off",
   "jest/require-top-level-describe": "error",
+
+  "jest/no-commented-out-tests": "off",
 };
 
 const toDiscuss = {
