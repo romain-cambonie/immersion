@@ -1,7 +1,6 @@
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
-  Router as ExpressRouter,
   Express,
 } from "express";
 import { ApplicationConfiguration } from "./ApplicationConfiguration";
@@ -16,7 +15,6 @@ export type Middleware = (
   next: () => void,
 ) => void;
 export type Application = Express;
-export type Router = ExpressRouter;
 
 export type Server = {
   application: Application;

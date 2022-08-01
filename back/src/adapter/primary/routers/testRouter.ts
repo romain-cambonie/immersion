@@ -4,10 +4,11 @@ import {
   ManagedAxios,
   TargetUrlsMapper,
 } from "@serenity-dev/http-client";
+
 import { Router } from "express";
 import { Request, Response } from "../../../ports/Server";
 
-export const testRouterMaker = () => {
+export const testRouterMaker = (): Router => {
   const agenciesRouter = Router();
 
   agenciesRouter

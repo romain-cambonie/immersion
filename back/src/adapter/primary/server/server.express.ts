@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import { ApplicationConfiguration } from "../../../ports/ApplicationConfiguration";
 import { Server } from "../../../ports/Server";
+import { rootRouterMaker } from "../routers/rootRouter";
 import { testRouterMaker } from "../routers/testRouter";
 import {
   appLoggerMaker,
@@ -21,13 +22,8 @@ export const createServerFromApplicationConfiguration = (
   application.use(metricsMiddlewareMaker(configuration));
   application.use(requestBodyToJsonMiddleware);
 
-  application.get(
-    "/",
-    (_req: express.Request, res: express.Response): express.Response =>
-      res.send("Hello World !"),
-  );
-
   // Registering routes
+  application.use(rootRouterMaker());
   application.use(testRouterMaker());
 
   return {
