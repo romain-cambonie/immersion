@@ -142,11 +142,11 @@ jobs:
           name: build-bundle-back
           path: back/dist
 
-  validation-back:
+  validation:
     needs:
       - dependencies
 
-    uses: ./.github/workflows/_validation-back.reusable.yml
+    uses: ./.github/workflows/_validation.reusable.yml
     with:
       cache-path: ${{ needs.dependencies.outputs.pnpm_cache_path }}
       cache-key: ${{ needs.dependencies.outputs.pnpm_cache_key }}
@@ -155,7 +155,7 @@ jobs:
     needs:
       - dynamic-variables
       - build
-      - validation-back
+      - validation
     uses: ./.github/workflows/_deploy-application-back.scalingo.reusable.yml
     with:
       application-full-name: ${{ needs.dynamic-variables.outputs.application-name }}

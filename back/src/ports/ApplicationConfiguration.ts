@@ -1,6 +1,6 @@
 export type EnvironmentTypes = "local" | "production" | "test";
 
 export type ApplicationConfiguration = {
-  environment: EnvironmentTypes,
-  port: number
-}
+  environment: EnvironmentTypes;
+  port: number;
+};

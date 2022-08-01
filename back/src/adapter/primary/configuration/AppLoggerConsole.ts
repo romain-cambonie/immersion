@@ -1,6 +1,5 @@
-//TODO This adapter has NOT been tested yet and cannot be trusted.
 import { AppLogger, LogLevel } from "../../../ports/AppLogger";
-
+/* eslint-disable no-console */
 export class AppLoggerConsole implements AppLogger {
   log<T = object>(level: LogLevel, message: string, data?: T): void {
     switch (level) {
@@ -28,9 +27,8 @@ export class AppLoggerConsole implements AppLogger {
   }
 }
 
-
 const consoleLogger: AppLoggerConsole = new AppLoggerConsole();
 
 // Example use: const logger = createFilenameLogger(__filename);
 // back/src/ports/AppLogger.ts => AppLogger.ts
-export const createConsoleLogger = (identifier: string): AppLogger => consoleLogger;
+export const createConsoleLogger = (): AppLogger => consoleLogger;
