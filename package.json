@@ -5,22 +5,24 @@
     "back"
   ],
   "scripts": {
+    "prepare": "husky install",
     "back": "pnpm --dir back",
     "front": "pnpm --dir front",
     "shared": "pnpm --dir shared",
-
     "cypress": "pnpm --dir cypress cypress:open",
-
     "lint:back": "eslint back/src --fix",
     "lint:front": "eslint front/src --fix",
     "lint:shared": "eslint shared/src --fix",
     "lint:libs": "eslint libs/ --fix",
     "lint": "eslint ./**/src/ --fix",
-
+    "lint:staged": "lint-staged",
     "prettier:back": "prettier --write back/src",
     "prettier": "prettier --write ./**/src/",
-    "prettier:check": "prettier --check src",
-
+    "prettier:check": "prettier --check ./**/src/",
     "test": "pnpm back test"
+  },
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3"
   }
 }
