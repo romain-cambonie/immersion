@@ -11,9 +11,6 @@ on:
         required: true
         type: string
 
-env:
-  working-directory: ./back
-
 jobs:
 #  includecheck:
 #    runs-on: ubuntu-latest
@@ -53,8 +50,7 @@ jobs:
         run: pnpm i --frozen-lockfile
 
       - name: Execute tests
-        working-directory: front
-        run: pnpm run test
+        run: pnpm test
 
   lint:
     runs-on: ubuntu-latest
@@ -84,8 +80,7 @@ jobs:
         run: pnpm i --frozen-lockfile
 
       - name: eslint
-        working-directory: front
-        run: pnpm run lint
+        run: pnpm lint
 
 #  prettier:
 #    runs-on: ubuntu-latest

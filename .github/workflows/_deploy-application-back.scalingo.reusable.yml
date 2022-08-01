@@ -56,12 +56,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: create-app-and-environment
     steps:
-      - name: We should only have and dist
+      - name: We should only have dist
         uses: actions/download-artifact@v3
         with:
           name: build-bundle-back
           path: ./dist
 
+      # TODO Find an elegant way to get dependencies (jq or another job ?)
       - name: Release - Generate minimalist package.json to start server express
         run: |
           touch package.json
@@ -75,7 +76,12 @@ jobs:
             },
             "dependencies": {
               "@serenity-dev/http-client": "^0.0.11",
-              "express": "^4.18.1"
+              "dotenv": "^16.0.1",
+              "express": "^4.18.1",
+              "pino": "^8.3.1",
+              "pino-http": "^8.2.0",
+              "pino-pretty": "^8.1.0",
+              "prom-client": "^14.0.1"
             }
           }
           EOF

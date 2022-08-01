@@ -19,6 +19,8 @@
 
     "prettier:back": "prettier --write back/src",
     "prettier": "prettier --write ./**/src/",
-    "prettier:check": "prettier --check src"
+    "prettier:check": "prettier --check src",
+
+    "test": "pnpm back test"
   }
 }
