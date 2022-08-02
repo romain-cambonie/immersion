@@ -1,5 +1,5 @@
 import "dotenv/config"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-import { applicationConfigurationFromEnvProcess } from "./adapter/primary/configuration/application";
+import { applicationConfigurationFromEnvProcess } from "./adapter/primary/configuration/applicationConfiguration";
 import {
   createServerFromApplicationConfiguration,
   startServerInProductionModeMaker,

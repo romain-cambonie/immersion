@@ -26,9 +26,6 @@ export class AppLoggerPino implements AppLogger {
 
       case "warn":
         return this.rootLogger.warn(data, message);
-
-      default:
-        return;
     }
   }
 }

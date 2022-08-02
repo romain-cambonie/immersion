@@ -3,7 +3,7 @@ import {
   applicationConfigurationFromEnvProcess,
   throwIfNotDefined,
   throwIfNotInArray,
-} from "./application";
+} from "./applicationConfiguration";
 
 describe("applicationConfiguration", () => {
   const authorizedValuesRecord: Record<EnvironmentTypes, null> = {

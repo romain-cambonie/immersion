@@ -4,16 +4,14 @@ import {
   isProductionApplicationConfiguration,
 } from "../../../ports/ApplicationConfiguration";
 import { Server } from "../../../ports/Server";
-import { rootRouterMaker } from "../routers/rootRouter";
-import { testRouterMaker } from "../routers/testRouter";
+import { rootRouterMaker } from "../routers/rootRouter/rootRouter";
+import { testRouterMaker } from "../routers/testRouter/testRouter";
 import {
   appLoggerMaker,
   httpLoggerMiddlewareMaker,
   metricMiddlewareByEnvironment,
   requestBodyToJsonMiddleware,
 } from "./server.express.config";
-
-// TODO We should test that in e2e fashion
 
 export const createServerFromApplicationConfiguration = (
   configuration: ApplicationConfiguration,
@@ -22,9 +20,7 @@ export const createServerFromApplicationConfiguration = (
 
   // Application-wide Middlewares
   application.use(httpLoggerMiddlewareMaker(configuration));
-
   application.use(metricMiddlewareByEnvironment[configuration.environment]);
-
   application.use(requestBodyToJsonMiddleware);
 
   // Registering routes

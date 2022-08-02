@@ -20,9 +20,6 @@ export class AppLoggerConsole implements AppLogger {
 
       case "warn":
         return console.warn(message, data);
-
-      default:
-        return;
     }
   }
 }
