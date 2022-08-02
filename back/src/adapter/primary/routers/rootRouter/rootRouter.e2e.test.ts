@@ -2,8 +2,8 @@
 // @ts-ignore
 import supertest from "supertest";
 import type { SuperTest, Test } from "supertest";
-import { createServerFromApplicationConfiguration } from "../adapter/primary/server/server.express";
-import { Server } from "../ports/Server";
+import { createServerFromApplicationConfiguration } from "../../server/server.express";
+import { Server } from "../../../../ports/Server";
 
 /*describe("Hello world route", () => {
   let request: SuperTest<Test>;
