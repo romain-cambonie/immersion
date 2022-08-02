@@ -1,4 +1,6 @@
-import supertest, { SuperTest, Test } from "supertest";
+//ts-ignore
+import supertest from "supertest";
+import type { SuperTest, Test } from "supertest";
 import { createServerFromApplicationConfiguration } from "../adapter/primary/server/server.express";
 import { Server } from "../ports/Server";
 
