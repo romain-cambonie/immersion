@@ -1,6 +1,5 @@
 import supertest, { SuperTest, Test } from "supertest";
 import { createServerFromApplicationConfiguration } from "../adapter/primary/server/server.express";
-import { ApplicationConfiguration } from "../ports/ApplicationConfiguration";
 import { Server } from "../ports/Server";
 
 /*describe("Hello world route", () => {
@@ -23,7 +22,7 @@ describe("Server: '/' route", () => {
   beforeEach(() => {
     const { application }: Server = createServerFromApplicationConfiguration({
       environment: "test",
-    } as ApplicationConfiguration);
+    });
     request = supertest(application);
   });
 

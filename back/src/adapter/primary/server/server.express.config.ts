@@ -1,6 +1,9 @@
 import express from "express";
-import { ApplicationConfiguration } from "../../../ports/ApplicationConfiguration";
 import { AppLogger } from "../../../ports/AppLogger";
+import {
+  ApplicationConfiguration,
+  EnvironmentTypes,
+} from "../../../ports/ApplicationConfiguration";
 import { Middleware } from "../../../ports/Server";
 import { createConsoleLogger } from "../configuration/AppLoggerConsole";
 import { createPinoLogger } from "../configuration/AppLoggerPino";
@@ -11,6 +14,8 @@ import { prometheusMetricsMiddleware } from "../middlewares/prometheusMetricsMid
 
 export const requestBodyToJsonMiddleware = express.json({ limit: "10mb" });
 
+// REVIEW 1
+// Avoir un maker avec une déconstruction est intéressant si on a besoin de plusieurs propriétés car ça respecte l'open close
 export const httpLoggerMiddlewareMaker = ({
   environment,
 }: ApplicationConfiguration): Middleware => {
@@ -21,25 +26,34 @@ export const httpLoggerMiddlewareMaker = ({
     case "local":
     case "test":
       return consoleHttpLoggerMiddleware;
+
+    // We do not put a default value on purpose to have a type error
+    // (in case of additional environment value that would not be explicitly defined)
   }
 };
 
-export const metricsMiddlewareMaker = ({
+// REVIEW 1 cont
+// Si on a un seul prop et un check de type de type au niveau du record il est surement intéressant d'avoir cette construction
+export const metricMiddlewareByEnvironment: Record<
+  EnvironmentTypes,
+  Middleware
+> = {
+  production: prometheusMetricsMiddleware,
+  local: consoleMetricsMiddleware,
+  test: consoleMetricsMiddleware,
+};
+
+// REVIEW
+// with const, without condition
+/*export const metricsMiddlewareMaker = ({
   environment,
-}: ApplicationConfiguration): Middleware => {
-  switch (environment) {
-    case "production":
-      return prometheusMetricsMiddleware;
-
-    case "local":
-    case "test":
-      return consoleMetricsMiddleware;
-  }
-};
+}: ApplicationConfiguration): Middleware => metricMiddlewareByEnvironment[environment];*/
 
 export const appLoggerMaker = ({
   environment,
 }: ApplicationConfiguration): AppLogger => {
+  // REVIEW
+  // with condition, without const (stateless)
   switch (environment) {
     case "production":
       return createPinoLogger("server");

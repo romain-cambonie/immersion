@@ -6,7 +6,7 @@ import {
 } from "./application";
 
 describe("applicationConfiguration", () => {
-  const authorizedValuesRecord: Record<EnvironmentTypes, any> = {
+  const authorizedValuesRecord: Record<EnvironmentTypes, null> = {
     local: null,
     production: null,
     test: null,
@@ -14,6 +14,7 @@ describe("applicationConfiguration", () => {
   const authorizedValuesFromRecord: string[] = Object.keys(
     authorizedValuesRecord,
   ).sort();
+
   const authorizedValuesTyped: EnvironmentTypes[] = [
     "local",
     "production",

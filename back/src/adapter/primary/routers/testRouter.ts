@@ -25,11 +25,11 @@ type FeatureCollection = {
 
 type Feature = {
   type: string;
-  geometry: any;
-  properties: any;
+  geometry: object;
+  properties: object;
 };
 
-const testGateway = async (): Promise<{ [key: string]: any }> => {
+const testGateway = async (): Promise<Feature[]> => {
   type TargetUrls = "ADDRESS_API_ENDPOINT";
 
   const targetToValidSearchUrl = (rawQueryString: string): AbsoluteUrl =>
@@ -51,17 +51,18 @@ const testGateway = async (): Promise<{ [key: string]: any }> => {
     },
   });
 
-  const result = featureCollectionTypeguard(response.data);
-  if (!result) return {};
+  if (!featureCollectionTypeguard(response.data as FeatureCollection))
+    return [];
 
-  const featureCollection = response.data as FeatureCollection;
-
-  return featureCollection.features[0];
+  return (response.data as FeatureCollection).features;
 };
 
-const featureCollectionTypeguard = (data: any): data is FeatureCollection =>
+const featureCollectionTypeguard = (data: {
+  features: { type: string; geometry: object; properties: object }[];
+}): data is FeatureCollection =>
   !!data &&
+  "features" in data &&
   !!data.features[0] &&
-  data.features[0]?.type === "Feature" &&
-  !!data.features[0]?.geometry &&
-  !!data.features[0]?.properties;
+  data.features[0].type === "Feature" &&
+  !!data.features[0].geometry &&
+  !!data.features[0].properties;
