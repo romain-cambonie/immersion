@@ -1,10 +1,10 @@
 import {
-  ApplicationConfiguration,
   EnvironmentTypes,
+  ProductionApplicationConfiguration,
 } from "../../../ports/ApplicationConfiguration";
 
 export const applicationConfigurationFromEnvProcess =
-  (): ApplicationConfiguration => ({
+  (): ProductionApplicationConfiguration => ({
     environment: throwIfNotInArray<EnvironmentTypes>({
       variableName: "NODE_ENV",
       authorizedValues: ["test", "local", "production"],

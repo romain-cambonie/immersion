@@ -9,11 +9,11 @@ on:
       scalingo-remote-domain-url:
         required: false
         type: string
-        default: 'git@ssh.osc-fr1.scalingo.com'
+        default: "git@ssh.osc-fr1.scalingo.com"
       scalingo-ssh-host-domain:
         required: false
         type: string
-        default: 'ssh.osc-fr1.scalingo.com'
+        default: "ssh.osc-fr1.scalingo.com"
 
     secrets:
       SCALINGO_API_TOKEN:
@@ -75,7 +75,7 @@ jobs:
               "start": "node --experimental-specifier-resolution=node dist/index.js"
             },
             "dependencies": {
-              "@serenity-dev/http-client": "^0.0.11",
+              "@serenity-dev/http-client": "^0.0.15",
               "dotenv": "^16.0.1",
               "express": "^4.18.1",
               "pino": "^8.3.1",
