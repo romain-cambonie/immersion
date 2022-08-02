@@ -1,4 +1,5 @@
-//ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import supertest from "supertest";
 import type { SuperTest, Test } from "supertest";
 import { createServerFromApplicationConfiguration } from "../adapter/primary/server/server.express";
