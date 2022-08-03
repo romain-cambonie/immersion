@@ -26,9 +26,7 @@ describe("applicationConfiguration", () => {
   });
 
   it("should throw if a variable is not defined or in array", () => {
-    // This is for test purpose and should never be done.
-    const prevNodeEnvValue = process.env.NODE_ENV;
-    process.env.NODE_ENV = "lol";
+    process.env.A_CUSTOM_VAR_MOCKING_NODE_DEV = "lol";
 
     const authorizedValuesTyped: EnvironmentTypes[] = [
       "test",
@@ -37,17 +35,14 @@ describe("applicationConfiguration", () => {
     ];
     expect(() => {
       throwIfNotInArray<EnvironmentTypes>({
-        variableName: "NODE_ENV",
+        variableName: "A_CUSTOM_VAR_MOCKING_NODE_DEV",
         authorizedValues: authorizedValuesTyped,
       });
     }).toThrow(
       Error(
-        `Expected NODE_ENV to be one of : test | local | production, got : 'lol'`,
+        `Expected A_CUSTOM_VAR_MOCKING_NODE_DEV to be one of : test | local | production, got : 'lol'`,
       ),
     );
-
-    // We reassign the value for not to impact other tests
-    process.env.NODE_ENV = prevNodeEnvValue;
   });
 
   it("should throw if a variable is not defined", () => {
@@ -60,8 +55,8 @@ describe("applicationConfiguration", () => {
     );
   });
 
+  // This is for test purpose and should never be done in a non-test env
   it("should return the expected configuration from env", () => {
-    // This is for test purpose and should never be done.
     const prevPORTValue = process.env.PORT;
     process.env.PORT = "3000";
 

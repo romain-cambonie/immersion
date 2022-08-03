@@ -1,6 +1,7 @@
 packages:
 #  - "front"
   - "back"
+  - "database"
 #  - "shared"
 #  - "libs/*"
 #  - "cypress"

@@ -15,6 +15,7 @@ const lintProjects = () => {
         project: [
           //"./front/tsconfig.json",
           "./back/tsconfig.json",
+          "./database/tsconfig.json",
           //"./shared/tsconfig.json",
           //"./libs/react-design-system/tsconfig.json",
         ],
