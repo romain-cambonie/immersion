@@ -15,6 +15,7 @@ const lintProjects = () => {
         project: [
           //"./front/tsconfig.json",
           "./back/tsconfig.json",
+          "./database/tsconfig.json",
           //"./shared/tsconfig.json",
           //"./libs/react-design-system/tsconfig.json",
         ],
@@ -34,7 +35,7 @@ const lintProjects = () => {
 const ignoreSomeRulesInSpecificFileTypes = () => {
   return [
     {
-      files: ["**!/InMemory*.ts", "**!/!*Stub*.ts", "**!/pg/migrations/!*.ts"],
+      files: ["**!/InMemory*.ts", "**!/!*Stub*.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
         tsconfigRootDir: __dirname,

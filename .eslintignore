@@ -4,3 +4,7 @@ node_modules/
 .idea/
 .git/
 vite.config.ts
+migration-template.ts
+/docker-data/*
+164*.ts
+165*.ts

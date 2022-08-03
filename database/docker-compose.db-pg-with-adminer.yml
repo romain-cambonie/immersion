@@ -1,0 +1,23 @@
+# Environnment variables are loaded from ./.env
+# If you do not have a .env copy and rename the .env.sample which contains a correct default configuration.
+version: "3"
+services:
+  postgres:
+    image: postgis/postgis:14-3.2
+    ports:
+      - "${PG_EXPOSED_PORT}:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - "${PG_DATA_MOUNTED_PATH}:/var/lib/postgresql/data"
+
+  adminer:
+    image: adminer
+    env_file:
+      - .env
+    ports:
+      - "${ADMINER_EXPOSED_PORT}:8080"
