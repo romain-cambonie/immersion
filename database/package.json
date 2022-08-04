@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "migrate": "ts-node node_modules/node-pg-migrate/bin/node-pg-migrate -j ts --template-file-name=migration-template.ts",
+    "build": "tsc",
     "reset": "rm -rf docker-data",
-    "start": "docker-compose -f docker-compose.db-pg-with-adminer.yml up"
+    "start": "docker-compose -f docker-compose.postgres.yml up"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",

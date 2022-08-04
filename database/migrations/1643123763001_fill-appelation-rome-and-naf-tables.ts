@@ -20,15 +20,13 @@ export const down = (pgm: MigrationBuilder) => {
 
 const makeQueryArray = (filePath: string) => {
   const originalCsv = fs.readFileSync(filePath, "utf-8");
-  const rows = originalCsv.split("\r\n");
+  const rows = originalCsv.split("\n");
   const rowsSliced = rows.slice(1, rows.length - 1);
   return rowsSliced.map((element) => element.split(";"));
 };
 
 const buildInsertRomesPublicDataQuery = async () => {
-  const arrayOfRomeData = makeQueryArray(
-    `${__dirname}/../staticData/romes_public.csv`,
-  );
+  const arrayOfRomeData = makeQueryArray(`./staticData/romes_public.csv`);
 
   return format(
     `INSERT INTO romes_public_data (code_rome, libelle_rome) VALUES %L`,
@@ -38,7 +36,7 @@ const buildInsertRomesPublicDataQuery = async () => {
 
 const buildInsertAppellationPublicDataQuery = async () => {
   const arrayOfAppellationData = makeQueryArray(
-    `${__dirname}/../staticData/appellations_public.csv`,
+    `./staticData/appellations_public.csv`,
   );
 
   return format(

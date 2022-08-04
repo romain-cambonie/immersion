@@ -9,7 +9,7 @@
     "build": "node_modules/.bin/tsc",
     "start": "node --require dotenv-expand/config --experimental-specifier-resolution=node dist/index.js",
     "start:dev": "pnpm build && pnpm start",
-    "test": "node --experimental-modules --experimental-vm-modules node_modules/jest/bin/jest.js --experimental-specifier-resolution=node --config jest.config.ts",
+    "test": "node --experimental-modules --experimental-vm-modules node_modules/jest/bin/jest.js --experimental-specifier-resolution=node --config jest.config.ts --detectOpenHandles",
     "lint": "pnpm -w run lint:back",
     "prettier": "pnpm -w run prettier:back"
   },

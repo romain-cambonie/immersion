@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "target": "es6",
     "lib": ["esNext"],
     "module": "CommonJS",
     "strict": true,
     "strictNullChecks": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "noImplicitOverride": true,
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
-  }
+  },
+  "exclude": ["./migration-template.ts"]
 }
