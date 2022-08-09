@@ -1,0 +1,61 @@
+name: Task - Test task
+#
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #Everyday at around 4:00 UTC (not using exact hours helps with runners availability)
+  #- cron: '58 3 * * *'
+
+env:
+  application-name: "immersion-facile-staging"
+  task: "node dist/adapters/primary/server/tasks/testTask.js"
+
+jobs:
+  dynamic-variables:
+    outputs:
+      application-name: ${{ steps.application-name.outputs.value }}
+      is-discord-hooked: ${{ steps.is-discord-hooked.outputs.value }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Application name
+        id: application-name
+        run: |
+          APPLICATION_NAME=${{ env.application-name }}
+          echo "::set-output name=value::$APPLICATION_NAME"
+
+      - name: Has a discord webhook for notification been defined
+        id: is-discord-hooked
+        run: |
+          IS_HOOKED=${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL != '' }}
+          echo "::set-output name=value::$IS_HOOKED"
+
+  # TODO Extract in a reusable workflow ?
+  execute-application-task:
+    name: Execute an application task in one-off container
+    needs:
+      - dynamic-variables
+    runs-on: ubuntu-latest
+    container:
+      image: rcambonie/scalingo-cli
+
+    steps:
+      - name: Login with api-token
+        run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
+
+      - name: Execute the task on an application clone
+        run: |
+          scalingo --app ${{ needs.dynamic-variables.outputs.application-name }} run bash -c "node ${{ env.task }}"
+
+  notify-discord:
+    if: ${{ needs.dynamic-variables.outputs.is-discord-hooked == 'true' }}
+    needs:
+      - dynamic-variables
+      - execute-application-task
+    uses: ./.github/workflows/_notify-task.discord.reusable.yml
+    with:
+      notifier-display-name: "Scheduled Task : Test Task"
+      task-status: ${{ needs.execute-application-task.outputs.task-status }}
+    secrets:
+      DISCORD_NOTIFY_HOOK_URL: ${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL }}

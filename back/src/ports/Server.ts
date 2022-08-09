@@ -5,6 +5,7 @@ import {
 } from "express";
 import { AppLogger } from "./AppLogger";
 import { ApplicationConfiguration } from "./ApplicationConfiguration";
+import { UseCases } from "./UseCases";
 
 //export type RequestHandler = ExpressRequestHandler;
 export type Request = ExpressRequest;
@@ -22,4 +23,5 @@ export type Server = {
   application: Application;
   configuration: ApplicationConfiguration;
   logger: AppLogger;
+  useCases: UseCases;
 };
