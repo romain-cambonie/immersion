@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Request, Response } from "../../../../ports/Server";
-import { backRoutes } from "../shared/src/adapters/primary/routes";
+import { backRoutes } from "shared/src/adapters/primary/routes";
 
 export const rootRouterMaker = (): Router => {
   const rootRouter = Router();

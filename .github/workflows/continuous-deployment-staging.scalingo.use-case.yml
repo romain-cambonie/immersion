@@ -7,9 +7,9 @@ name: CD-Staging CD
 
 on:
   workflow_dispatch:
-#  push:
-#    branches:
-#      - master
+  push:
+    branches:
+      - feat/*
 
 env:
   application-name: "immersion-facile-staging"
