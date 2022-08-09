@@ -27,10 +27,24 @@ export const createServerFromApplicationConfiguration = (
   application.use(rootRouterMaker());
   application.use(testRouterMaker());
 
+  // Application Logger
+  const applicationLogger = appLoggerMaker(configuration);
+
   return {
     application,
     configuration,
-    logger: appLoggerMaker(configuration),
+    logger: applicationLogger,
+    useCases: {
+      testUseCase: {
+        // eslint-disable-next-line @typescript-eslint/require-await
+        execute: async () => {
+          applicationLogger.log(
+            "info",
+            "I am inside the execution of a test use case",
+          );
+        },
+      },
+    },
   };
 };
 
