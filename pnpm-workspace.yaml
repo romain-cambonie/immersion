@@ -2,6 +2,6 @@ packages:
 #  - "front"
   - "back"
   - "database"
-#  - "shared"
+  - "shared"
 #  - "libs/*"
 #  - "cypress"
