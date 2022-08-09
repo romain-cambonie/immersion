@@ -133,7 +133,7 @@ jobs:
           echo "${{ needs.create-app-and-environment.outputs.deployer-private-ssh-key }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ssh.osc-fr1.scalingo.com >> ~/.ssh/known_hosts
 
-      # TODO Check return value for error and notify failure
+      # TODO Find a way to check on deploy result
       - name: Deploy - Push to deploy
         run: |
           git push scalingo -f

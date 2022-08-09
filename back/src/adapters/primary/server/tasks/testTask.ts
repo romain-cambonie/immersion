@@ -3,6 +3,7 @@ import { applicationConfigurationFromEnvProcess } from "../../configuration/appl
 import { createServerFromApplicationConfiguration } from "../server.express";
 
 const server = createServerFromApplicationConfiguration(
+  // TODO Add 'TASK' environement configuration and configure with another logic.
   applicationConfigurationFromEnvProcess(),
 );
 
