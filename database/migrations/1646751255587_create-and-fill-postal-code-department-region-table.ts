@@ -4,9 +4,7 @@ import type { MigrationBuilder } from "node-pg-migrate";
 export const up = async (pgm: MigrationBuilder) => {
   pgm.sql(
     fse
-      .readFileSync(
-        `${__dirname}/../staticData/postal_code_department_region.sql`,
-      )
+      .readFileSync(`./staticData/postal_code_department_region.sql`)
       .toString("utf8"),
   );
 };

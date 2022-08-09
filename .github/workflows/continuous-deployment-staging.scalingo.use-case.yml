@@ -12,9 +12,10 @@ on:
 #      - master
 
 env:
-  application-name: 'immersion-facile'
-  node-version: '16.15.0'
-  addon-plan-postgresql: 'postgresql-sandbox'
+  application-name: "immersion-facile-staging"
+  reference-application-name: "immersion-facile-staging"
+  node-version: "16.15.0"
+  addon-plan-postgresql: "postgresql-starter-512"
 
 jobs:
   dynamic-variables:
@@ -40,11 +41,17 @@ jobs:
           APPLICATION_NAME=${{ env.application-name }}
           echo "::set-output name=value::$APPLICATION_NAME"
 
+      - name: Reference application name
+        id: reference-application-name
+        run: |
+          REFERENCE_APPLICATION_NAME=${{ env.reference-application-name }}
+          echo "::set-output name=value::$REFERENCE_APPLICATION_NAME"
+
       - name: Scalingo postgresql addon plan
         id: addon-plan-postgresql
         run: |
           POSTGRESQL_PLAN=$(echo ${{ env.addon-plan-postgresql }})
-          echo "::set-output name=value::$POSTGRESQL_PLAN"          
+          echo "::set-output name=value::$POSTGRESQL_PLAN"
 
       - name: Has a discord webhook for notification been defined
         id: is-discord-hooked
@@ -132,15 +139,18 @@ jobs:
         run: pnpm i --frozen-lockfile
 
       - name: Build
-        working-directory: back
         run: |
-          pnpm build
+          pnpm back build
+          pnpm database build
 
       - name: Upload build bundle as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build-bundle-back
-          path: back/dist
+          name: build-bundle
+          path: |
+            back/dist
+            database/dist
+            database/staticData
 
   validation:
     needs:
@@ -150,7 +160,10 @@ jobs:
     with:
       cache-path: ${{ needs.dependencies.outputs.pnpm_cache_path }}
       cache-key: ${{ needs.dependencies.outputs.pnpm_cache_key }}
+      node-version: ${{ needs.dependencies.outputs.node-version }}
 
+  # TODO Better error management !
+  # Right now some steps in this job may fail silently
   deploy-back:
     needs:
       - dynamic-variables
@@ -159,28 +172,39 @@ jobs:
     uses: ./.github/workflows/_deploy-application-back.scalingo.reusable.yml
     with:
       application-full-name: ${{ needs.dynamic-variables.outputs.application-name }}
-      scalingo-remote-domain-url: 'git@ssh.osc-fr1.scalingo.com'
-      scalingo-ssh-host-domain: 'ssh.osc-fr1.scalingo.com'
+      scalingo-remote-domain-url: "git@ssh.osc-fr1.scalingo.com"
+      scalingo-ssh-host-domain: "ssh.osc-fr1.scalingo.com"
     secrets:
       SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
 
-#  additional-services:
-#    needs:
-#      - dynamic-variables
-#      - deploy
-#    uses: ./.github/workflows/_db-postgresql.scalingo.reusable.yml
-#    with:
-#      application-full-name: ${{ needs.dynamic-variables.outputs.application-name }}
-#      reference-application-name: ${{ needs.dynamic-variables.outputs.application-name }}
-#      addon-plan-postgresql : ${{ needs.dynamic-variables.outputs.addon-plan-postgresql }}
-#    secrets:
-#      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+  setup-database:
+    needs:
+      - dynamic-variables
+      - deploy-back
+    uses: ./.github/workflows/_db-postgresql.scalingo.reusable.yml
+    with:
+      application-full-name: ${{ needs.dynamic-variables.outputs.application-name }}
+      reference-application-name: ${{ needs.dynamic-variables.outputs.reference-application-name }}
+      addon-plan-postgresql: ${{ needs.dynamic-variables.outputs.addon-plan-postgresql }}
+    secrets:
+      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+
+  # TODO Extract to reusable workflow
+  #  migrate:
+  #    name: Migrations
+  #    needs:
+  #      - setup-database
+  #    uses: ./.github/workflows/_node-pg-migrate.scalingo.reusable.yml
+  #    with:
+  #      application-full-name: ${{ needs.dynamic-variables.outputs.application-name }}
+  #    secrets:
+  #      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
 
   notify-discord:
     if: ${{ needs.dynamic-variables.outputs.is-discord-hooked == 'true' }}
     needs:
       - dynamic-variables
-      - deploy-back
+      - setup-database
     uses: ./.github/workflows/_notify-deployment.discord.reusable.yml
     with:
       deployer-name: "Scalingo Back Deployer"

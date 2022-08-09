@@ -141,3 +141,24 @@ TODO
 TODO
 
 # Desactivating husky while rebasing
+
+# Restore backup
+
+TODO Restore backup from local workstation.
+https://doc.scalingo.com/databases/postgresql/dump-restore#dump-and-restore-from-your-local-workstation
+
+# Développer une github action avec une cli
+
+# Tester la cli en local pour le développement
+
+# utiliser le dernier tag pour être sur de pull la dernière version
+
+docker run -it rcambonie/scalingo-cli:1.23.0 bash
+
+# L'api token se génére sur trouve sur (https://dashboard.scalingo.com/account/tokens):
+
+scalingo login --api-token=TOKEN
+
+# Jouer Faire apparaitre la commande
+
+scalingo --app immersion-facile addons
