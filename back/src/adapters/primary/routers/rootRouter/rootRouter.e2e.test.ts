@@ -2,7 +2,7 @@
 // @ts-ignore
 import supertest from "supertest";
 import type { SuperTest, Test } from "supertest";
-import { backRoutes } from "shared/src/adapters/primary/routes";
+import { backRoutes } from "../../../../routes";
 import { createServerFromApplicationConfiguration } from "../../server/server.express";
 import { Server } from "../../../../ports/Server";
 

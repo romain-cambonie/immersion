@@ -143,6 +143,8 @@ jobs:
           pnpm back build
           pnpm database build
 
+      #
+      # TODO https://www.codecapers.com.au/sharing-typescript-code-between-projects/
       - name: Upload build bundle as artifact
         uses: actions/upload-artifact@v3
         with:
@@ -151,6 +153,7 @@ jobs:
             back/dist
             database/dist
             database/staticData
+            shared/dist
 
   validation:
     needs:
