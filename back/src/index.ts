@@ -1,8 +1,8 @@
-import { applicationConfigurationFromEnvProcess } from "./adapter/primary/configuration/applicationConfiguration";
+import { applicationConfigurationFromEnvProcess } from "./adapters/primary/configuration/applicationConfiguration";
 import {
   createServerFromApplicationConfiguration,
   startServerInProductionModeMaker,
-} from "./adapter/primary/server/server.express";
+} from "./adapters/primary/server/server.express";
 
 const server = createServerFromApplicationConfiguration(
   applicationConfigurationFromEnvProcess(),

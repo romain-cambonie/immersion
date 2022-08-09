@@ -126,26 +126,28 @@ pnpm database migrate down 5
 
 Des usages plus avancés peuvent être trouvés dans la [documentation](https://salsita.github.io/node-pg-migrate/#/).
 
-# Husky (TODO)
+# Husky
 
-TODO
-
-## Why lint-staged
+Husky configuration is in [.husky](.husky) | [Documentation](https://typicode.github.io/husky/#/)
+There is a script for each hook.
 
 ## Pre-commit hook
 
-TODO
+The pre-commit hook execute the `lint-staged` script
+
+## Lint-staged
+
+[Documentation](https://github.com/okonet/lint-staged)
+
+The current configuration run the linter and prettier on 'staged' files (files where git has detected a modification)
 
 ## Pre-push hook
 
-TODO
+The current configuration run
 
-# Desactivating husky while rebasing
-
-# Restore backup
-
-TODO Restore backup from local workstation.
-https://doc.scalingo.com/databases/postgresql/dump-restore#dump-and-restore-from-your-local-workstation
+- pnpm prettier:check => Check prettier on all files
+- eslint ./\*\*/src/ => Check lint on all files in sources directories
+- pnpm test => Run all tests not needing dependencies
 
 # Développer une github action avec une cli
 
@@ -162,3 +164,41 @@ scalingo login --api-token=TOKEN
 # Jouer Faire apparaitre la commande
 
 scalingo --app immersion-facile addons
+
+# Adding a new project with code to the repo
+
+## Pnpm
+
+- Add the workspace to the package.json
+
+- Modify as needed the project scripts (build, lint, prettier etc...)
+
+- If your projet is another one dependency register it in the target `package.json` dependencies
+  eg : adding 'shared' to 'back'
+
+```json
+  "devDependencies": {
+    [...]
+    "shared": "workspace:shared",
+```
+
+- To have ide / type / imports completion add it to the `tsconfig` "path"  
+  eg : adding 'shared' to 'back'
+
+```json
+{
+  "compilerOptions": {
+    [...],
+    "paths": {
+      "shared/*": ["./../../shared/*"],
+    }
+  }
+}
+```
+
+## Lint
+
+Register tsconfig that include the project lintable files into
+
+- [.lintstagedrc](.lintstagedrc)
+- [.eslint](.eslintrc.js)

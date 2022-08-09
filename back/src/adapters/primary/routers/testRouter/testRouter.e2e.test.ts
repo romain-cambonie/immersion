@@ -2,6 +2,7 @@
 // @ts-ignore
 import supertest from "supertest";
 import type { SuperTest, Test } from "supertest";
+import { backRoutes } from "shared/src/adapters/primary/routes";
 import { createServerFromApplicationConfiguration } from "../../server/server.express";
 import { Server } from "../../../../ports/Server";
 
@@ -19,7 +20,7 @@ import { Server } from "../../../../ports/Server";
   });
 });*/
 
-describe("Server: '/' route", () => {
+describe(`Server: '${backRoutes.test}' route`, () => {
   let request: SuperTest<Test>;
 
   beforeEach(() => {
@@ -30,7 +31,29 @@ describe("Server: '/' route", () => {
   });
 
   it("says hello", async () => {
-    const response = await request.get("/");
-    expect(response.text).toBe("Hello World !");
+    const response = await request.get(backRoutes.test);
+    expect(response.body).toStrictEqual([
+      {
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [4.790584, 45.75916] },
+        properties: {
+          label: "61 Rue des Aqueducs 69005 Lyon",
+          score: 0.8826381818181818,
+          housenumber: "61",
+          id: "69385_0415_00061",
+          name: "61 Rue des Aqueducs",
+          postcode: "69005",
+          citycode: "69385",
+          x: 839173.14,
+          y: 6519306.51,
+          city: "Lyon",
+          district: "Lyon 5e Arrondissement",
+          context: "69, Rhône, Auvergne-Rhône-Alpes",
+          type: "housenumber",
+          importance: 0.70902,
+          street: "Rue des Aqueducs",
+        },
+      },
+    ]);
   });
 });

@@ -6,13 +6,14 @@ import {
 } from "@serenity-dev/http-client";
 
 import { Router } from "express";
+import { backRoutes } from "../shared/src/adapters/primary/routes";
 import { Request, Response } from "../../../../ports/Server";
 
 export const testRouterMaker = (): Router => {
   const agenciesRouter = Router();
 
   agenciesRouter
-    .route(`/test`)
+    .route(backRoutes.test)
     .get(async (_req: Request, res: Response) => res.json(await testGateway()));
 
   return agenciesRouter;

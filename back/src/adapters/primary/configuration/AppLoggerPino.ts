@@ -1,4 +1,4 @@
-//TODO This adapter has NOT been tested yet and cannot be trusted.
+//TODO This adapters has NOT been tested yet and cannot be trusted.
 import pino, { Logger as PinoLogger } from "pino";
 import { AppLogger, LogLevel } from "../../../ports/AppLogger";
 

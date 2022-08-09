@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "workspaces": [
     "back",
-    "database"
+    "database",
+    "shared"
   ],
   "scripts": {
+    "build": "pnpm back build && pnpm database build",
     "prepare": "husky install",
     "back": "pnpm --dir back",
     "front": "pnpm --dir front",
