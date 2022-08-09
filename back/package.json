@@ -10,6 +10,7 @@
     "start": "node --require dotenv-expand/config --experimental-specifier-resolution=node dist/index.js",
     "start:dev": "pnpm build && pnpm start",
     "test": "node --experimental-modules --experimental-vm-modules node_modules/jest/bin/jest.js --experimental-specifier-resolution=node --config jest.config.ts --detectOpenHandles",
+    "task:test": "NODE_ENV=local PORT=1234 node --experimental-specifier-resolution=node dist/adapters/primary/server/tasks/testTask.js",
     "lint": "pnpm -w run lint:back",
     "prettier": "pnpm -w run prettier:back"
   },
