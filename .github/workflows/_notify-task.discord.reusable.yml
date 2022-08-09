@@ -3,9 +3,6 @@ name: Reusable Discord Deployment Notify Workflow
 on:
   workflow_call:
     inputs:
-      application-full-name:
-        required: true
-        type: string
       notifier-display-name:
         required: true
         type: string
