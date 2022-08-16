@@ -10,22 +10,22 @@ export class AppLoggerPino implements AppLogger {
   log<T = object>(level: LogLevel, message: string, data: T): void {
     switch (level) {
       case "fatal":
-        return this.rootLogger.fatal(data, message);
+        return this.rootLogger.fatal(data, message, data ?? { message });
 
       case "info":
-        return this.rootLogger.info(data, message);
+        return this.rootLogger.info(data, message, data ?? { message });
 
       case "error":
-        return this.rootLogger.error(data, message);
+        return this.rootLogger.error(data, message, data ?? { message });
 
       case "debug":
-        return this.rootLogger.debug(data, message);
+        return this.rootLogger.debug(data, message, data ?? { message });
 
       case "trace":
-        return this.rootLogger.trace(data, message);
+        return this.rootLogger.trace(data, message, data ?? { message });
 
       case "warn":
-        return this.rootLogger.warn(data, message);
+        return this.rootLogger.warn(data, message, data ?? { message });
     }
   }
 }

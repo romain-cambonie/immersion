@@ -12,9 +12,9 @@ on:
         type: string
 
     outputs:
-      task-result:
-        description: "The application database url"
-        value: ${{ jobs.execute-task.outputs.task-result }}
+      task-output:
+        description: "The task stdout output"
+        value: ${{ jobs.execute-application-task.outputs.task-output }}
 
     secrets:
       SCALINGO_API_TOKEN:
@@ -23,12 +23,11 @@ on:
 jobs:
   execute-application-task:
     name: Execute an application task in one-off container
-    needs:
-      - dynamic-variables
     runs-on: ubuntu-latest
     container:
       image: rcambonie/scalingo-cli
-
+    outputs:
+      task-output: ${{ steps.execute-task.outputs.task-output }}
     steps:
       - name: Login with api-token
         run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
@@ -37,6 +36,6 @@ jobs:
         id: execute-task
         run: |
           set +e
-          TASK_RESULT=$(scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}")
+          TASK_OUTPUT=$(scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}" | grep )
           set -e
-          echo "::set-output name=task-result::$TASK_RESULT"
+          echo "::set-output name=task-output::$TASK_OUTPUT"
