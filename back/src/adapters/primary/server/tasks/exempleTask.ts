@@ -8,14 +8,12 @@ const server = createServerFromApplicationConfiguration({
 
 // The server should contain all dependencies needed for the use case execution
 const exempleTask = (server: Server) => async () => {
-  server.logger.log("info", "Initiating Test Task");
   await server.useCases.testUseCase.execute();
-  server.logger.log("info", "Test Task Finished !");
 };
 
 exempleTask(server)()
   .then(() => {
-    server.logger.log("info", "Finished successfully");
+    server.logger.log("info", "Task finished successfully");
     process.exit(0);
   })
   .catch((error) => {
