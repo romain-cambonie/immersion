@@ -6,7 +6,6 @@ import {
 } from "../../../ports/ApplicationConfigurationKinds";
 import { Middleware } from "../../../ports/Server";
 import { createConsoleLogger } from "../configuration/AppLoggerConsole";
-import { createPinoLogger } from "../configuration/AppLoggerPino";
 import { consoleHttpLoggerMiddleware } from "../middlewares/consoleHttpLoggerMiddleware";
 import { consoleMetricsMiddleware } from "../middlewares/consoleMetricsMiddleware";
 import { pinoHttpLoggerMiddleware } from "../middlewares/pinoHttpLoggerMiddleware";
@@ -56,7 +55,8 @@ export const appLoggerMaker = ({
   // with condition, without const (stateless)
   switch (environment) {
     case "production":
-      return createPinoLogger("server");
+      return createConsoleLogger();
+    //return createPinoLogger("server");
 
     case "local":
     case "test":

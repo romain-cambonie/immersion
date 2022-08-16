@@ -20,4 +20,4 @@ jobs:
     steps:
       - name: Notify discord hooked canal
         run: |
-          curl --header "Content-Type:application/json" -d "{\"username\":\"${{ inputs.notifier-display-name }}\", \"content\":\"Résutat de l'execution' ${{ inputs.task-output }} \"}" ${{ secrets.DISCORD_NOTIFY_HOOK_URL }}
+          curl --header "Content-Type:application/json" -d "{\"username\":\"${{ inputs.notifier-display-name }}\", \"content\":\"Résutat de l'execution : ${{ inputs.task-output }} \"}" ${{ secrets.DISCORD_NOTIFY_HOOK_URL }}
