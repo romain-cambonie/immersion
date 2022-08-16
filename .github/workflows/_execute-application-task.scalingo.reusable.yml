@@ -14,7 +14,7 @@ on:
     outputs:
       task-result:
         description: "The application database url"
-        value: ${{ jobs.execute-task.outputs.task-result }}
+        value: ${{ jobs.execute-application-task.outputs.task-result }}
 
     secrets:
       SCALINGO_API_TOKEN:
@@ -23,8 +23,6 @@ on:
 jobs:
   execute-application-task:
     name: Execute an application task in one-off container
-    needs:
-      - dynamic-variables
     runs-on: ubuntu-latest
     container:
       image: rcambonie/scalingo-cli
@@ -38,5 +36,6 @@ jobs:
         run: |
           set +e
           TASK_RESULT=$(scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}")
+          echo $TASK_RESULT
           set -e
           echo "::set-output name=task-result::$TASK_RESULT"
