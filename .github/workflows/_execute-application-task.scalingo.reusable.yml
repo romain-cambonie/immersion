@@ -13,7 +13,7 @@ on:
 
     outputs:
       task-result:
-        description: "The application database url"
+        description: "The task stdout output"
         value: ${{ jobs.execute-application-task.outputs.task-result }}
 
     secrets:
@@ -26,16 +26,18 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: rcambonie/scalingo-cli
-
+    outputs:
+      task-result: ${{ steps.execute-task.outputs.task-result }}
     steps:
       - name: Login with api-token
         run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
 
-      - name: Execute the task on an application clone
+      - name: Execute the task on an application clone,
         id: execute-task
         run: |
           set +e
-          TASK_RESULT=$(scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}")
-          echo $TASK_RESULT
+          TASK_OUTPUT=$(scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}")
+          RESULT=$($TASK_OUTPUT | grep Task)
+          echo $RESULT
           set -e
-          echo "::set-output name=task-result::$TASK_RESULT"
+          echo "::set-output name=task-result::$RESULT"

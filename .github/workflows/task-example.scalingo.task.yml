@@ -65,6 +65,6 @@ jobs:
     uses: ./.github/workflows/_notify-task.discord.reusable.yml
     with:
       notifier-display-name: ${{ needs.dynamic-variables.outputs.task-name }}
-      task-status: ${{ needs.execute-task.outputs.task-result }}
+      task-result: ${{ needs.execute-task.outputs.task-result }}
     secrets:
       DISCORD_NOTIFY_HOOK_URL: ${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL }}
