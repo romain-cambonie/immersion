@@ -1,4 +1,4 @@
-import { EnvironmentTypes } from "../../../ports/ApplicationConfiguration";
+import { EnvironmentTypes } from "../../../ports/ApplicationConfigurationKinds";
 import {
   applicationConfigurationFromEnvProcess,
   throwIfNotDefined,

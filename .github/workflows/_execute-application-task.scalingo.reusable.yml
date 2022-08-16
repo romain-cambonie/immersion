@@ -1,0 +1,42 @@
+# This is a Work In Progress
+name: Reusable Scalingo execute an application task in a one-off container
+on:
+  workflow_call:
+    inputs:
+      application-reference-name:
+        required: true
+        type: string
+
+      task:
+        required: true
+        type: string
+
+    outputs:
+      task-result:
+        description: "The application database url"
+        value: ${{ jobs.execute-task.outputs.task-result }}
+
+    secrets:
+      SCALINGO_API_TOKEN:
+        required: true
+
+jobs:
+  execute-application-task:
+    name: Execute an application task in one-off container
+    needs:
+      - dynamic-variables
+    runs-on: ubuntu-latest
+    container:
+      image: rcambonie/scalingo-cli
+
+    steps:
+      - name: Login with api-token
+        run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
+
+      - name: Execute the task on an application clone
+        id: execute-task
+        run: |
+          set +e
+          TASK_RESULT=$(scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}")
+          set -e
+          echo "::set-output name=task-result::$TASK_RESULT"
