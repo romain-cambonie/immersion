@@ -36,6 +36,6 @@ jobs:
         id: execute-task
         run: |
           set +e
-          TASK_OUTPUT=$(scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}" | grep )
+          scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}"
           set -e
-          echo "::set-output name=task-output::$TASK_OUTPUT"
+          echo "::set-output name=task-output::$?"

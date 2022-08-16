@@ -19,11 +19,6 @@ on:
         required: false
         type: string
 
-    outputs:
-      target-database-url:
-        description: "The application database url"
-        value: ${{ jobs.get-database-url.outputs.target-database-url }}
-
     secrets:
       SCALINGO_API_TOKEN:
         required: true
