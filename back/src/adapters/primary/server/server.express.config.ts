@@ -1,9 +1,9 @@
 import express from "express";
 import { AppLogger } from "../../../ports/AppLogger";
 import {
-  ApplicationConfiguration,
+  AllApplicationConfigurationKinds,
   EnvironmentTypes,
-} from "../../../ports/ApplicationConfiguration";
+} from "../../../ports/ApplicationConfigurationKinds";
 import { Middleware } from "../../../ports/Server";
 import { createConsoleLogger } from "../configuration/AppLoggerConsole";
 import { createPinoLogger } from "../configuration/AppLoggerPino";
@@ -18,7 +18,7 @@ export const requestBodyToJsonMiddleware = express.json({ limit: "10mb" });
 // Avoir un maker avec une déconstruction est intéressant si on a besoin de plusieurs propriétés car ça respecte l'open close
 export const httpLoggerMiddlewareMaker = ({
   environment,
-}: ApplicationConfiguration): Middleware => {
+}: AllApplicationConfigurationKinds): Middleware => {
   switch (environment) {
     case "production":
       return pinoHttpLoggerMiddleware;
@@ -51,7 +51,7 @@ export const metricMiddlewareByEnvironment: Record<
 
 export const appLoggerMaker = ({
   environment,
-}: ApplicationConfiguration): AppLogger => {
+}: AllApplicationConfigurationKinds): AppLogger => {
   // REVIEW
   // with condition, without const (stateless)
   switch (environment) {

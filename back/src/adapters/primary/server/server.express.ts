@@ -1,8 +1,9 @@
 import express, { Express } from "express";
 import {
-  ApplicationConfiguration,
+  ApplicationConfigurationKinds,
   isProductionApplicationConfiguration,
-} from "../../../ports/ApplicationConfiguration";
+  TaskApplicationConfiguration,
+} from "../../../ports/ApplicationConfigurationKinds";
 import { Server } from "../../../ports/Server";
 import { rootRouterMaker } from "../routers/rootRouter/rootRouter";
 import { testRouterMaker } from "../routers/testRouter/testRouter";
@@ -14,7 +15,7 @@ import {
 } from "./server.express.config";
 
 export const createServerFromApplicationConfiguration = (
-  configuration: ApplicationConfiguration,
+  configuration: ApplicationConfigurationKinds | TaskApplicationConfiguration,
 ): Server => {
   const application: Express = express();
 
@@ -42,6 +43,12 @@ export const createServerFromApplicationConfiguration = (
             "info",
             "I am inside the execution of a test use case",
           );
+        },
+      },
+      sendEmailsWithAssessmentCreationLink: {
+        // eslint-disable-next-line @typescript-eslint/require-await
+        execute: async () => {
+          applicationLogger.log("info", "I should do something interesting");
         },
       },
     },

@@ -1,4 +1,4 @@
-name: Task - Test task
+name: Task - Emails Bilans
 #
 
 on:
@@ -9,13 +9,15 @@ on:
 
 env:
   application-name: "immersion-facile-staging"
-  #TODO Add 'TASK' environement configuration
-  task: "NODE_ENV=test PORT=8888 node --experimental-specifier-resolution=node dist/adapters/primary/server/tasks/testTask.js"
+  task: "node --experimental-specifier-resolution=node dist/adapters/primary/server/tasks/assessmentEmailsTask.js"
+  task-name: "Envoi des emails bilans"
 
 jobs:
   dynamic-variables:
     outputs:
       application-name: ${{ steps.application-name.outputs.value }}
+      task: ${{ steps.task.outputs.value }}
+      task-name: ${{ steps.task-name.outputs.value }}
       is-discord-hooked: ${{ steps.is-discord-hooked.outputs.value }}
 
     runs-on: ubuntu-latest
@@ -26,37 +28,43 @@ jobs:
           APPLICATION_NAME=${{ env.application-name }}
           echo "::set-output name=value::$APPLICATION_NAME"
 
+      - name: Task
+        id: task
+        run: |
+          TASK=${{ env.task }}
+          echo "::set-output name=value::$TASK"
+
+      - name: Task name
+        id: task-name
+        run: |
+          TASK=${{ env.task-name }}
+          echo "::set-output name=value::$TASK"
+
       - name: Has a discord webhook for notification been defined
         id: is-discord-hooked
         run: |
           IS_HOOKED=${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL != '' }}
           echo "::set-output name=value::$IS_HOOKED"
 
-  # TODO Extract in a reusable workflow ?
-  execute-application-task:
-    name: Execute an application task in one-off container
+  execute-task:
+    name: Execute an application task in an application one-off container
     needs:
       - dynamic-variables
-    runs-on: ubuntu-latest
-    container:
-      image: rcambonie/scalingo-cli
-
-    steps:
-      - name: Login with api-token
-        run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
-
-      - name: Execute the task on an application clone
-        run: |
-          scalingo --app ${{ needs.dynamic-variables.outputs.application-name }} run bash -c "${{ env.task }}"
+    uses: ./.github/workflows/_execute-application-task.scalingo.reusable.yml
+    with:
+      application-reference-name: ${{ needs.dynamic-variables.outputs.application-name }}
+      task: ${{ needs.dynamic-variables.outputs.task }}
+    secrets:
+      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
 
   notify-discord:
     if: ${{ needs.dynamic-variables.outputs.is-discord-hooked == 'true' }}
     needs:
       - dynamic-variables
-      - execute-application-task
+      - execute-task
     uses: ./.github/workflows/_notify-task.discord.reusable.yml
     with:
-      notifier-display-name: "Scheduled Task : Test Task"
-      task-status: ${{ needs.execute-application-task.outputs.task-status }}
+      notifier-display-name: ${{ needs.dynamic-variables.outputs.task-name }}
+      task-status: ${{ needs.execute-application-task.outputs.task-result }}
     secrets:
       DISCORD_NOTIFY_HOOK_URL: ${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL }}

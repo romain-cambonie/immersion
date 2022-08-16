@@ -202,3 +202,54 @@ Register tsconfig that include the project lintable files into
 
 - [.lintstagedrc](.lintstagedrc)
 - [.eslint](.eslintrc.js)
+
+# Ajouter une tache applicative régulière (cron)
+
+En exemple nous allons ajouter une nouvelle tâche régulière "Envoyer les emails bilans"
+
+## 1. Ajouter le workflow dans .github/workflows
+
+Copier la tâche d'exemple [task-exemple.scalingo.task](.github/workflows/task-exemple.scalingo.task.yml)
+et créer la votre [task-assessment-emails](.github/workflows/task-assessment-emails.scalingo.task.yml)
+
+## 2. Créer le point d'entrée de la tâche
+
+Copier le point d'entrée d'exemple [exempleTask.ts](back/src/adapters/primary/server/tasks/exempleTask.ts)
+et créer la votre [assessmentEmailsTask](back/src/adapters/primary/server/tasks/assessmentEmailsTask.ts)
+
+## 2. Créer le point d'entrée de la tâche
+
+Copier le point d'entrée d'exemple [exempleTask.ts](back/src/adapters/primary/server/tasks/exempleTask.ts)
+et créer la votre [assessmentEmailsTask](back/src/adapters/primary/server/tasks/assessmentEmailsTask.ts)
+
+## 2. Use case lié à la tâche
+
+### 1. Déclarez le use case
+
+Rajoutez votre use case à la liste dans [UseCases.ts](back/src/ports/UseCases.ts).
+
+### 1. Implémentez le use case
+
+Puis proposez une implémentation dans [server.express](back/src/adapters/primary/server/server.express.ts)
+eg
+
+```typescript
+useCases: {
+  // [...]
+  sendEmailsWithAssessmentCreationLink: {
+    execute: async () => {
+      applicationLogger.log("info", "I should do something interesting");
+    };
+  }
+}
+```
+
+## 3. Variables d'environement du workflow
+
+Mettez à jours les variables d'environement de votre workflow :
+
+```yaml
+application-name: "immersion-facile-staging" #l'application qui servira de base à l'execution de votre tâche
+task: "node --experimental-specifier-resolution=node dist/adapters/primary/server/tasks/assessmentEmailsTask.js" #Pensez à mettre le nom de votre point d'entré transpilé
+task-name: "Exemple de tâche régulière" #Le nom de votre tâche pour la notification d'execution
+```

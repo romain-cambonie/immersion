@@ -1,0 +1,70 @@
+name: Task - Example task
+#
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #Everyday at around 4:00 UTC (not using exact hours helps with runners availability)
+  #- cron: '58 3 * * *'
+
+env:
+  application-name: "immersion-facile-staging"
+  task: "node --experimental-specifier-resolution=node dist/adapters/primary/server/tasks/exempleTask.js"
+  task-name: "Exemple de tâche régulière"
+
+jobs:
+  dynamic-variables:
+    outputs:
+      application-name: ${{ steps.application-name.outputs.value }}
+      task: ${{ steps.task.outputs.value }}
+      task-name: ${{ steps.task-name.outputs.value }}
+      is-discord-hooked: ${{ steps.is-discord-hooked.outputs.value }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Application name
+        id: application-name
+        run: |
+          APPLICATION_NAME=${{ env.application-name }}
+          echo "::set-output name=value::$APPLICATION_NAME"
+
+      - name: Task
+        id: task
+        run: |
+          TASK=${{ env.task }}
+          echo "::set-output name=value::$TASK"
+
+      - name: Task name
+        id: task-name
+        run: |
+          TASK=${{ env.task-name }}
+          echo "::set-output name=value::$TASK"
+
+      - name: Has a discord webhook for notification been defined
+        id: is-discord-hooked
+        run: |
+          IS_HOOKED=${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL != '' }}
+          echo "::set-output name=value::$IS_HOOKED"
+
+  execute-task:
+    name: Execute an application task in an application one-off container
+    needs:
+      - dynamic-variables
+    uses: ./.github/workflows/_execute-application-task.scalingo.reusable.yml
+    with:
+      application-reference-name: ${{ needs.dynamic-variables.outputs.application-name }}
+      task: ${{ needs.dynamic-variables.outputs.task }}
+    secrets:
+      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+
+  notify-discord:
+    if: ${{ needs.dynamic-variables.outputs.is-discord-hooked == 'true' }}
+    needs:
+      - dynamic-variables
+      - execute-task
+    uses: ./.github/workflows/_notify-task.discord.reusable.yml
+    with:
+      notifier-display-name: ${{ needs.dynamic-variables.outputs.task-name }}
+      task-status: ${{ needs.execute-application-task.outputs.task-result }}
+    secrets:
+      DISCORD_NOTIFY_HOOK_URL: ${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL }}
