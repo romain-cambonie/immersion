@@ -103,10 +103,10 @@
 
     /* Needed for imports in IDE */
     "paths": {
-      "shared/*": ["./../shared/*"]
+      "shared/*": ["./../shared"]
     }
   },
   "references": [{ "path": "../shared" }],
-  "exclude": ["/**/*.test.ts", "jest.config.ts"],
+  "exclude": ["/**/*.test.ts", "jest.config.ts", "dist"],
   "include": ["/**/*.ts", "/**/*.d.ts"]
 }

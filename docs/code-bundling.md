@@ -55,7 +55,7 @@ Pour [shared/tsconfig.json](shared/tsconfig.json)
 ```
 
 Pour [back/tsconfig.test.json](back/tsconfig.test.json)  
-Note: ts-jest ne permet pas de se comporter comme tsc --build donc nous prenons en rootdir le répertoire parent pour inclure les fichiers nécessaires.
+Note: ts-jest ne permet pas de se comporter comme tsc --build donc nous prenons en rootDir le répertoire parent pour inclure les fichiers nécessaires.
 
 ```json
 {
@@ -79,7 +79,7 @@ En passant l'option 'tsc --build' provoque :
 
 - Trouve tous les projects référencés
 - Détecte si ils sont à jour
-- Build les projects non-à-jour en prenant en compte leur propres dépendances
+- Build les projects non-à-jour en prenant en compte leurs propres dépendances
 
 La commande du [package.json](back/package.json) devient donc
 

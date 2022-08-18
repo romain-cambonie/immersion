@@ -4,7 +4,7 @@ import supertest from "supertest";
 import type { SuperTest, Test } from "supertest";
 import { createServerFromApplicationConfiguration } from "../../server/server.express";
 import { Server } from "../../../../ports/Server";
-import { backRoutes } from "shared/src/adapters/primary/routes";
+import { backRoutes } from "shared";
 
 /*describe("Hello world route", () => {
   let request: SuperTest<Test>;

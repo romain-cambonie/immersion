@@ -6,7 +6,7 @@ import {
 } from "@serenity-dev/http-client";
 
 import { Router } from "express";
-import { backRoutes } from "shared/src/adapters/primary/routes";
+import { backRoutes } from "shared";
 import { Request, Response } from "../../../../ports/Server";
 
 export const testRouterMaker = (): Router => {

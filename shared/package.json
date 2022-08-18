@@ -1,5 +1,8 @@
 {
   "name": "shared",
   "version": "1.0.0",
-  "dependencies": {}
+  "dependencies": {},
+  "type": "module",
+  "module": "./lib/index.js",
+  "main": "./lib/index.js"
 }

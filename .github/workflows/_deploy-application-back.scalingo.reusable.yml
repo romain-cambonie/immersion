@@ -99,7 +99,7 @@ jobs:
             "version": "1.0.0",
             "type": "module",
             "scripts": {
-              "start": "node --require dotenv-expand/config --experimental-specifier-resolution=node dist/src/index.js",
+              "start": "node --require dotenv-expand/config --experimental-specifier-resolution=node dist/src/index.js"
             },
             "dependencies": {
               "@serenity-dev/http-client": "^0.0.15",
