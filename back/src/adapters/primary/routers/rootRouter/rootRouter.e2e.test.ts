@@ -2,9 +2,9 @@
 // @ts-ignore
 import supertest from "supertest";
 import type { SuperTest, Test } from "supertest";
-import { backRoutes } from "../../../../routes";
 import { createServerFromApplicationConfiguration } from "../../server/server.express";
 import { Server } from "../../../../ports/Server";
+import { backRoutes } from "shared/src/adapters/primary/routes";
 
 /*describe("Hello world route", () => {
   let request: SuperTest<Test>;

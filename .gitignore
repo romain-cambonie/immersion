@@ -1,6 +1,18 @@
+# IDE and system
 .DS_Store
 .idea
+
+# Packages manager
 node_modules
+
+# Build artifacts
 dist
+
+# Environment variables
 .env
+
+# Docker local data
 database/docker-data/*
+
+#Typescript
+*.tsbuildinfo
