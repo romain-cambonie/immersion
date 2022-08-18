@@ -143,6 +143,7 @@ jobs:
           pnpm back build
           pnpm database build
 
+      # Including 'shared' as it contains its built bundle
       - name: Upload build bundle as artifact
         uses: actions/upload-artifact@v3
         with:
@@ -151,6 +152,7 @@ jobs:
             back/dist
             database/dist
             database/staticData
+            shared
 
   validation:
     needs:

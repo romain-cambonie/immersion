@@ -11,7 +11,9 @@ import { consoleMetricsMiddleware } from "../middlewares/consoleMetricsMiddlewar
 import { pinoHttpLoggerMiddleware } from "../middlewares/pinoHttpLoggerMiddleware";
 import { prometheusMetricsMiddleware } from "../middlewares/prometheusMetricsMiddleware";
 
-export const requestBodyToJsonMiddleware = express.json({ limit: "10mb" });
+export const requestBodyToJsonMiddleware: Middleware = express.json({
+  limit: "10mb",
+});
 
 // REVIEW 1
 // Avoir un maker avec une déconstruction est intéressant si on a besoin de plusieurs propriétés car ça respecte l'open close

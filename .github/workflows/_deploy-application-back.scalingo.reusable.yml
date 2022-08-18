@@ -69,6 +69,8 @@ jobs:
       # | | [...] => built migration files and static data
       # | /staticData
       # | | [...] => static sql & csv files
+      # /shared
+      # | /lib
 
       # Target release structure:
       # /app
@@ -79,6 +81,7 @@ jobs:
       # | | [...] => built migration files and static data
       # | /staticData
       # | | [...] => static sql & csv files
+      # | /shared => Will be used to install shared as a local module
       # | package.json => contains start script & minimal dependencies
 
       - name: Move the folders to achieve target folder structure
@@ -88,6 +91,7 @@ jobs:
           mv database/staticData staticData
           rm -rf back
           rm -rf database
+          ls -la
 
       # TODO Find an elegant way to get dependencies (jq or another job ?)
       - name: Release - Generate minimalist package.json to start server express
@@ -99,16 +103,18 @@ jobs:
             "version": "1.0.0",
             "type": "module",
             "scripts": {
-              "start": "node --experimental-specifier-resolution=node dist/index.js"
+              "start": "node --require dotenv-expand/config --experimental-specifier-resolution=node dist/src/index.js"
             },
             "dependencies": {
               "@serenity-dev/http-client": "^0.0.15",
               "dotenv": "^16.0.1",
+              "dotenv-expand": "^8.0.3",
               "express": "^4.18.1",
               "pino": "^8.3.1",
               "pino-http": "^8.2.0",
               "pino-pretty": "^8.1.0",
-              "prom-client": "^14.0.1"
+              "prom-client": "^14.0.1",
+              "shared": "file:./shared"
             }
           }
           EOF

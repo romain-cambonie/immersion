@@ -253,3 +253,8 @@ application-name: "immersion-facile-staging" #l'application qui servira de base 
 task: "node --experimental-specifier-resolution=node dist/adapters/primary/server/tasks/assessmentEmailsTask.js" #Pensez à mettre le nom de votre point d'entré transpilé
 task-name: "Exemple de tâche régulière" #Le nom de votre tâche pour la notification d'execution
 ```
+
+# Code partagé entre les projets
+
+Le projet "Shared" est une librarie partagée entre les projets
+Plus d'information sur l'organisation et la mise en place du code partagé : [Code bundling](docs/code-bundling.md)
