@@ -3,7 +3,7 @@ import {
   ApplicationConfigurationKinds,
   isProductionApplicationConfiguration,
   TaskApplicationConfiguration,
-} from "../../../ports/ApplicationConfigurationKinds";
+} from "../../../ports/ApplicationConfiguration";
 import { Server } from "../../../ports/Server";
 import { rootRouterMaker } from "../routers/rootRouter/rootRouter";
 import { testRouterMaker } from "../routers/testRouter/testRouter";

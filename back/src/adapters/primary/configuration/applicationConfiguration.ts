@@ -1,7 +1,7 @@
 import {
   ApplicationConfigurationKinds,
   EnvironmentTypes,
-} from "../../../ports/ApplicationConfigurationKinds";
+} from "../../../ports/ApplicationConfiguration";
 
 export const applicationConfigurationFromEnvProcess =
   (): ApplicationConfigurationKinds => ({

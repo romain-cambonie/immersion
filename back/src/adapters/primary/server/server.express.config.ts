@@ -3,7 +3,7 @@ import { AppLogger } from "../../../ports/AppLogger";
 import {
   AllApplicationConfigurationKinds,
   EnvironmentTypes,
-} from "../../../ports/ApplicationConfigurationKinds";
+} from "../../../ports/ApplicationConfiguration";
 import { Middleware } from "../../../ports/Server";
 import { createConsoleLogger } from "../configuration/AppLoggerConsole";
 import { consoleHttpLoggerMiddleware } from "../middlewares/consoleHttpLoggerMiddleware";
