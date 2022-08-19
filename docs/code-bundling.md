@@ -73,6 +73,21 @@ Note: ts-jest ne permet pas de se comporter comme tsc --build donc nous prenons 
 }
 ```
 
+Pour [shared/tsconfig.test.json](back/tsconfig.test.json)
+
+```json
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "dependencies": {},
+  "type": "module",
+  "module": "./lib/index.js",
+  "main": "./lib/index.js"
+}
+```
+
+Note: même en esm le champ 'main' est nécessaire pour ne pas avoir l'errer MODULE_NOT_FOUND
+
 ## 2. Changer la commande de build
 
 En passant l'option 'tsc --build' provoque :
