@@ -1,0 +1,58 @@
+# TODO If databases internal to scalingo are accessible to each other without opening them to the internet this workflow may not be needed.
+name: zReusable Scalingo Postgresql Restore From App
+# Clone a local postgresql database from another deployed app as reference
+
+on:
+  workflow_call:
+    inputs:
+      application-full-name:
+        required: true
+        type: string
+
+      #If using extentions => PostGIS extension requires at least a “Starter 512M” plan to work. (ref : https://doc.scalingo.com/databases/postgresql/extensions)
+      addon-plan-postgresql:
+        required: true
+        type: string
+
+      reference-application-name:
+        required: false
+        type: string
+
+      clone_database_url:
+        required: false
+        type: string
+
+    secrets:
+      SCALINGO_API_TOKEN:
+        required: true
+
+jobs:
+  # Restore from another scalingo reference app database dump
+  restore-and-migrate-db:
+    name: Dump and restore the production database to the feature app
+    runs-on: ubuntu-latest
+    needs:
+      - addon-postgresql-with-extentions
+    container:
+      image: rcambonie/scalingo-cli
+
+    steps:
+      - name: Login with api-token
+        run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
+
+      - name: Export the app database url string
+        id: target-database-url
+        run: |
+          TARGET_DATABASE_URL=$(scalingo --app ${{ inputs.application-full-name }} env | grep SCALINGO_POSTGRESQL_URL=postgres://)
+          echo $TARGET_DATABASE_URL
+          TARGET_DATABASE_URL=${TARGET_DATABASE_URL//SCALINGO_POSTGRESQL_URL=/}
+          echo $TARGET_DATABASE_URL
+          echo "::set-output name=target-database-url::$TARGET_DATABASE_URL"
+
+      # Option 1 (Optional) Restore from another scalingo reference app database dump
+      - name: Dump the reference application database and restore to the target database from dump
+        if: ${{ inputs.application-full-name != inputs.reference-application-name }}
+        run:
+          scalingo --app ${{ inputs.reference-application-name }} run bash -c "dbclient-fetcher psql && \
+          pg_dump --clean --if-exists --format c --no-owner --no-privileges --no-comments --exclude-schema 'information_schema' --exclude-schema '^pg_*' --dbname $DATABASE_URL --file dump.pgsql && \
+          pg_restore --clean --if-exists --no-owner --no-privileges --no-comments --dbname ${{ steps.export-target-database-url.outputs.target-database-url }} --file dump.pgsql"

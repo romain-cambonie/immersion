@@ -1,0 +1,74 @@
+# TODO Manage several extentions / choose extentions (postgis harcoded for now)
+# TODO We can probably performance by checking addon status instead of blind wait
+# TODO Problem with remote pgsql-console hanging and not giving back control,
+# falling to quit after creating extention, needing to timeout the action as a temporary workaround
+name: zReusable Scalingo Postgresql Addon Setup
+# Create an empty postgresql database linked to the application if it does not exist.
+# If created optionally install postgis database addon
+
+on:
+  workflow_call:
+    inputs:
+      application-name:
+        required: true
+        type: string
+
+      addon-plan-postgresql:
+        required: true
+        type: string
+
+      #If using extentions => PostGIS extension requires at least a “Starter 512M” plan to work. (ref : https://doc.scalingo.com/databases/postgresql/extensions)
+      add-extention:
+        required: false
+        type: boolean
+        default: false
+
+      # 45 seconds waiting time has empirically been enough to provision the addon before creating extentions
+      wait-before-provisionning-extentions:
+        required: false
+        type: number
+        default: 45
+
+    secrets:
+      SCALINGO_API_TOKEN:
+        required: true
+
+jobs:
+  addon-postgresql-with-extentions:
+    name: Add the postgresql addon if not present
+    runs-on: ubuntu-latest
+    container:
+      image: rcambonie/scalingo-cli
+
+    steps:
+      - name: Login with api-token
+        run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
+
+      - name: check if addon exists
+        id: postgresql-addon-exist
+        run: |
+          set +e
+          POSTGRESQL_ADDON_EXIST=$(scalingo --app ${{ inputs.application-name }} addons | grep -c PostgreSQL)
+          set -e
+          echo "::set-output name=postgresql-addon-exist::$POSTGRESQL_ADDON_EXIST"
+
+      ## The if form with if [[ $VAR -eq NUMBER ]];
+      #- name: Add the postgresql addon
+      #  if: ${{ steps.postgresql-addon-exist.outputs.postgresql-addon-exist }} == 0
+      #  run: if [[ ${{ steps.postgresql-addon-exist.outputs.postgresql-addon-exist }} -eq 0 ]]; then scalingo --app ${{ inputs.application-full-name }} addons-add postgresql ${{ inputs.addon-plan-postgresql }}; else echo 'addon exists already'; fi
+
+      - name: Add the postgresql addon
+        id: postgresql-addon-add
+        if: steps.postgresql-addon-exist.outputs.postgresql-addon-exist == 0
+        run: |
+          scalingo --app ${{ inputs.application-name }} addons-add postgresql ${{ inputs.addon-plan-postgresql }}
+
+      #Only if we are creating the DB for empty migrations without restore
+      - name: Add the postgresql addon extention
+        if: inputs.add-extention == true
+        id: postgresql-addon-extentions
+        timeout-minutes: 1
+        continue-on-error: true
+        run: |
+          sleep ${{ inputs.wait-before-provisionning-extentions }}
+          echo "CREATE extension postgis;" | scalingo --app ${{ inputs.application-name }} pgsql-console

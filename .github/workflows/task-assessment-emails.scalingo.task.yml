@@ -1,5 +1,5 @@
+#WIP
 name: Task - Emails Bilans
-#
 
 on:
   workflow_dispatch:
@@ -45,6 +45,16 @@ jobs:
         run: |
           IS_HOOKED=${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL != '' }}
           echo "::set-output name=value::$IS_HOOKED"
+
+  clone-immersion-pe-db:
+    needs:
+      - dynamic-variables
+    uses: ./.github/workflows/_clone-remote.postgresql.scalingo.reusable.yml
+    with:
+      application-name: ${{ needs.dynamic-variables.outputs.application-name }}
+    secrets:
+      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+      REMOTE_DATABASE_URL: ${{ secrets.PE_PRODUCTION_DATABASE_URL }}
 
   execute-task:
     name: Execute an application task in an application one-off container

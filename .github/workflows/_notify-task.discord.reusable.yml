@@ -1,4 +1,5 @@
-name: Reusable Discord Deployment Notify Workflow
+name: zReusable Discord Task Notify
+# Post a notification that a task has been completed or failed on the linked discord channel
 
 on:
   workflow_call:
