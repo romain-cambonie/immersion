@@ -8,7 +8,7 @@ on:
   #- cron: '58 3 * * *'
 
 env:
-  application-name: "immersion-facile-staging"
+  application-name: "immersion-facile-task-reference"
   task: "node --experimental-specifier-resolution=node dist/adapters/primary/server/tasks/assessmentEmailsTask.js"
   task-name: "Envoi des emails bilans"
 
@@ -46,10 +46,11 @@ jobs:
           IS_HOOKED=${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL != '' }}
           echo "::set-output name=value::$IS_HOOKED"
 
+  # TODO maybe the clone (create / migrate / data) should be another workflows
   clone-immersion-pe-db:
     needs:
       - dynamic-variables
-    uses: ./.github/workflows/_clone-remote.postgresql.scalingo.reusable.yml
+    uses: ./.github/workflows/_dump-restore-remote-data.postgresql.scalingo.reusable.yml
     with:
       application-name: ${{ needs.dynamic-variables.outputs.application-name }}
     secrets:
@@ -60,6 +61,7 @@ jobs:
     name: Execute an application task in an application one-off container
     needs:
       - dynamic-variables
+      - clone-immersion-pe-db
     uses: ./.github/workflows/_execute-application-task.scalingo.reusable.yml
     with:
       application-reference-name: ${{ needs.dynamic-variables.outputs.application-name }}
@@ -75,6 +77,6 @@ jobs:
     uses: ./.github/workflows/_notify-task.discord.reusable.yml
     with:
       notifier-display-name: ${{ needs.dynamic-variables.outputs.task-name }}
-      task-status: ${{ needs.execute-application-task.outputs.task-result }}
+      task-status: ${{ needs.execute-task.outputs.task-result }}
     secrets:
       DISCORD_NOTIFY_HOOK_URL: ${{ secrets.DISCORD_NOTIFY_TASK_HOOK_URL }}

@@ -176,14 +176,38 @@ jobs:
     with:
       application-name: ${{ needs.dynamic-variables.outputs.application-name }}
       addon-plan-postgresql: ${{ needs.dynamic-variables.outputs.addon-plan-postgresql }}
+      add-extention: true
     secrets:
       SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+
+  # TODO Extract dependencies from database/package.json
+  migrate-database:
+    needs:
+      - dynamic-variables
+      - setup-database-addon
+    uses: ./.github/workflows/_migrate.postgresql.scalingo.reusable.yml
+    with:
+      application-name: ${{ needs.dynamic-variables.outputs.application-name }}
+      migration-dependencies: "node-pg-migrate pg-format date-fns fs-extra ramda zod"
+    secrets:
+      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+
+  clone-immersion-pe-db-data:
+    needs:
+      - dynamic-variables
+      - migrate-database
+    uses: ./.github/workflows/_dump-restore-remote-data.postgresql.scalingo.reusable.yml
+    with:
+      application-name: ${{ needs.dynamic-variables.outputs.application-name }}
+    secrets:
+      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+      REMOTE_DATABASE_URL: ${{ secrets.PE_PRODUCTION_DATABASE_URL }}
 
   notify-discord:
     if: ${{ needs.dynamic-variables.outputs.is-discord-hooked == 'true' }}
     needs:
       - dynamic-variables
-      - setup-database-addon
+      - clone-immersion-pe-db
     uses: ./.github/workflows/_notify-deployment.discord.reusable.yml
     with:
       deployer-name: "Scalingo Back Deployer"
