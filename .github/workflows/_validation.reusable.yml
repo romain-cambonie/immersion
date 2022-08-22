@@ -1,4 +1,6 @@
-name: Reusable Validation Workflow
+# TODO This can probably be improved in several ways
+name: zReusable Validation Workflow
+# Run the 'test' and 'lint' package.json scripts on independant instances
 
 on:
   workflow_call:

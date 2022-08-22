@@ -1,0 +1,43 @@
+name: zReusable Scalingo Postgresql Migrate With Node
+# Install node migrations dependencies then run the built migrations located in '/app/migrations'
+
+on:
+  workflow_call:
+    inputs:
+      application-name:
+        required: true
+        type: string
+
+      migration-dependencies:
+        required: true
+        type: string
+
+    secrets:
+      SCALINGO_API_TOKEN:
+        required: true
+
+jobs:
+  # From one-off container (files changes to the container are not persisted)
+  # https://doc.scalingo.com/platform/app/tasks
+  migrate-db:
+    name: Dump and restore the production database to the feature app
+    runs-on: ubuntu-latest
+    container:
+      image: rcambonie/scalingo-cli
+
+    steps:
+      - name: Login with api-token
+        run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
+
+      # Run the missing migrations
+
+      # Need to remove package.json or else it gives and error because trying to run in esm
+      # TODO Find if we can we force the us of cjs ?
+
+      # TODO Better migration dependencies management, extract dependencies from database package.json with jq
+
+      # Was forced to add "ls && " at the start or else the npm command hangs for an unknowable reason.
+      # DATABASE_URL=${{ steps.target-database-url.outputs.target-database-url }} probably not needed as we have SCALINGO_POSTGRESQL_URL in env variables
+      - name: Run the missing migrations with node-pg-migrate
+        if: inputs.direct_database_url == ''
+        run: scalingo --app ${{ inputs.application-name }} run DATABASE_URL=$SCALINGO_POSTGRESQL_URL bash -c "ls && npm install ${{ inputs.migration-dependencies }} && ls && rm package.json && ls && node-pg-migrate up"

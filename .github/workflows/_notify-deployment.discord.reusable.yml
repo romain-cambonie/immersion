@@ -1,9 +1,10 @@
-name: Reusable Discord Deployment Notify Workflow
+name: zReusable Discord Deployment Notify Workflow
+# Post a notification that a deployment has been completed on the linked discord channel
 
 on:
   workflow_call:
     inputs:
-      application-full-name:
+      application-name:
         required: true
         type: string
       deployed-domain:
@@ -23,4 +24,4 @@ jobs:
     steps:
       - name: Notify discord hooked canal
         run: |
-          curl --header "Content-Type:application/json" -d "{\"username\":\"${{ inputs.deployer-name }}\", \"content\":\"Une nouvelle version pour ${{ inputs.application-full-name }} est disponible.\n [Tester la démo](https://${{ inputs.deployed-domain }})  \"}" ${{ secrets.DISCORD_NOTIFY_HOOK_URL }}
+          curl --header "Content-Type:application/json" -d "{\"username\":\"${{ inputs.deployer-name }}\", \"content\":\"Une nouvelle version pour ${{ inputs.application-name }} est disponible.\n [Tester la démo](https://${{ inputs.deployed-domain }})  \"}" ${{ secrets.DISCORD_NOTIFY_HOOK_URL }}

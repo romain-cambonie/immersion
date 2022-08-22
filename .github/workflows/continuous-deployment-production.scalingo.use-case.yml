@@ -1,28 +1,23 @@
+# TODO For now this is a staging copy that deploy the code with an empty db used to tests tasks
 # This is a Work In Progress
-name: CD-Staging CD
-# This assume you have the following tasks in the package.json
-#build
-#test (used in the reusable Validation Workflow)
-#lint (used in the reusable Validation Workflow)
+name: CD-Production CD
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/*
+#  push:
+#    branches:
+#      - master
 
 env:
-  application-name: "immersion-facile-staging"
-  reference-application-name: "immersion-facile-staging"
+  application-name: "immersion-facile-task-reference"
   node-version: "16.15.0"
-  addon-plan-postgresql: "postgresql-starter-512"
+  addon-plan-postgresql: "postgresql-starter-1024"
 
 jobs:
   dynamic-variables:
     outputs:
       node-version: ${{ steps.node-version.outputs.value }}
       application-name: ${{ steps.application-name.outputs.value }}
-      reference-application-name: ${{ steps.reference-application-name.outputs.value }}
       addon-plan-postgresql: ${{ steps.addon-plan-postgresql.outputs.value }}
       is-discord-hooked: ${{ steps.is-discord-hooked.outputs.value }}
       deployed-domain: ${{ steps.deployed-domain.outputs.value }}
@@ -40,12 +35,6 @@ jobs:
         run: |
           APPLICATION_NAME=${{ env.application-name }}
           echo "::set-output name=value::$APPLICATION_NAME"
-
-      - name: Reference application name
-        id: reference-application-name
-        run: |
-          REFERENCE_APPLICATION_NAME=${{ env.reference-application-name }}
-          echo "::set-output name=value::$REFERENCE_APPLICATION_NAME"
 
       - name: Scalingo postgresql addon plan
         id: addon-plan-postgresql
@@ -187,19 +176,6 @@ jobs:
     with:
       application-name: ${{ needs.dynamic-variables.outputs.application-name }}
       addon-plan-postgresql: ${{ needs.dynamic-variables.outputs.addon-plan-postgresql }}
-      add-extention: true
-    secrets:
-      SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
-
-  # TODO Extract dependencies from database/package.json
-  migrate-database:
-    needs:
-      - dynamic-variables
-      - setup-database-addon
-    uses: ./.github/workflows/_migrate.postgresql.scalingo.reusable.yml
-    with:
-      application-name: ${{ needs.dynamic-variables.outputs.application-name }}
-      migration-dependencies: "node-pg-migrate pg-format date-fns fs-extra ramda zod"
     secrets:
       SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
 
@@ -207,7 +183,7 @@ jobs:
     if: ${{ needs.dynamic-variables.outputs.is-discord-hooked == 'true' }}
     needs:
       - dynamic-variables
-      - migrate-database
+      - setup-database-addon
     uses: ./.github/workflows/_notify-deployment.discord.reusable.yml
     with:
       deployer-name: "Scalingo Back Deployer"
