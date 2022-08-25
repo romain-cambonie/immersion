@@ -24,4 +24,5 @@ export type Server = {
   configuration: AllApplicationConfigurationKinds;
   logger: AppLogger;
   useCases: UseCases;
+  //gateways: Gateways;
 };
