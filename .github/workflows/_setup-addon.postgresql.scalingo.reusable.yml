@@ -62,13 +62,26 @@ jobs:
         if: steps.postgresql-addon-exist.outputs.postgresql-addon-exist == 0
         run: |
           scalingo --app ${{ inputs.application-name }} addons-add postgresql ${{ inputs.addon-plan-postgresql }}
-
-      #Only if we are creating the DB for empty migrations without restore
-      - name: Add the postgresql addon extention
-        if: inputs.add-extention == true
-        id: postgresql-addon-extentions
-        timeout-minutes: 1
-        continue-on-error: true
-        run: |
           sleep ${{ inputs.wait-before-provisionning-extentions }}
-          echo "CREATE extension postgis;" | scalingo --app ${{ inputs.application-name }} pgsql-console
+
+      - name: Create extention postgis.
+        if: inputs.add-extention == true
+        env:
+          DATABASE_VAR: "$DATABASE_URL"
+        run: >
+          scalingo --app ${{ inputs.application-name }} run bash -c "
+          echo 'Installing pgsql-client' &&
+          dbclient-fetcher pgsql &&
+          echo 'Creating extention postgis' &&
+          psql -c 'CREATE extension IF NOT EXISTS postgis;' --dbname "$DATABASE_VAR" &&
+          echo 'Extention created'"
+
+#      #Only if we are creating the DB for empty migrations without restore
+#      - name: Add the postgresql addon extention
+#        if: inputs.add-extention == true
+#        id: postgresql-addon-extentions
+#        timeout-minutes: 1
+#        continue-on-error: true
+#        run: |
+#          sleep ${{ inputs.wait-before-provisionning-extentions }}
+#          echo "CREATE extension postgis;" | scalingo --app ${{ inputs.application-name }} pgsql-console

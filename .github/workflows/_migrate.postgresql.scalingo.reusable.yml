@@ -20,7 +20,7 @@ jobs:
   # From one-off container (files changes to the container are not persisted)
   # https://doc.scalingo.com/platform/app/tasks
   migrate-db:
-    name: Dump and restore the production database to the feature app
+    name: Run the missing migrations
     runs-on: ubuntu-latest
     container:
       image: rcambonie/scalingo-cli
@@ -39,5 +39,4 @@ jobs:
       # Was forced to add "ls && " at the start or else the npm command hangs for an unknowable reason.
       # DATABASE_URL=${{ steps.target-database-url.outputs.target-database-url }} probably not needed as we have SCALINGO_POSTGRESQL_URL in env variables
       - name: Run the missing migrations with node-pg-migrate
-        if: inputs.direct_database_url == ''
         run: scalingo --app ${{ inputs.application-name }} run DATABASE_URL=$SCALINGO_POSTGRESQL_URL bash -c "ls && npm install ${{ inputs.migration-dependencies }} && ls && rm package.json && ls && node-pg-migrate up"

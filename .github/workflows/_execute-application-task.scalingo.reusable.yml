@@ -13,9 +13,9 @@ on:
         type: string
 
     outputs:
-      task-output:
+      task-status:
         description: "The task stdout output"
-        value: ${{ jobs.execute-application-task.outputs.task-output }}
+        value: ${{ jobs.execute-application-task.outputs.task-status }}
 
     secrets:
       SCALINGO_API_TOKEN:
@@ -28,7 +28,7 @@ jobs:
     container:
       image: rcambonie/scalingo-cli
     outputs:
-      task-output: ${{ steps.execute-task.outputs.task-output }}
+      task-status: ${{ steps.execute-task.outputs.task-status }}
     steps:
       - name: Login with api-token
         run: scalingo login --api-token=${{ secrets.SCALINGO_API_TOKEN }}
@@ -39,4 +39,4 @@ jobs:
           set +e
           scalingo --app ${{ inputs.application-reference-name }} run bash -c "ls && ${{ inputs.task }}"
           set -e
-          echo "::set-output name=task-output::$?"
+          echo "::set-output name=task-status::$?"
