@@ -4,7 +4,9 @@ import {
   isProductionApplicationConfiguration,
   TaskApplicationConfiguration,
 } from "../../../ports/ApplicationConfiguration";
+import { EmailGateway } from "../../../ports/EmailGateway";
 import { Server } from "../../../ports/Server";
+import { SendEmailsWithAssessmentCreationLinkMaker } from "../../../useCases/SendEmailsWithAssessmentCreationLink";
 import { rootRouterMaker } from "../routers/rootRouter/rootRouter";
 import { testRouterMaker } from "../routers/testRouter/testRouter";
 import {
@@ -31,6 +33,9 @@ export const createServerFromApplicationConfiguration = (
   // Application Logger
   const applicationLogger = appLoggerMaker(configuration);
 
+  // Gateways
+  const emailGateway = {} as EmailGateway;
+
   return {
     application,
     configuration,
@@ -45,12 +50,8 @@ export const createServerFromApplicationConfiguration = (
           );
         },
       },
-      sendEmailsWithAssessmentCreationLink: {
-        // eslint-disable-next-line @typescript-eslint/require-await
-        execute: async () => {
-          applicationLogger.log("info", "I should do something interesting");
-        },
-      },
+      sendEmailsWithAssessmentCreationLink:
+        SendEmailsWithAssessmentCreationLinkMaker(emailGateway),
     },
   };
 };
